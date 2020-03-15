@@ -50,6 +50,20 @@ class ReactionsWorkFacade extends Component
     }
 
     /**
+     * Checks if a user is allowed to react on a specific element
+     *
+     * @param $user
+     * @param Element $element
+     * @return bool
+     */
+    public function canReact($user, Element $element): bool
+    {
+        // allow only logged in users
+        $userId = $user ? $user->id : \Craft::$app->getUser()->id;
+        return $userId !== null;
+    }
+
+    /**
      * Submits a reaction
      * @example {% do craft.reactions_work.react('like', entry) %}
      * @example ReactionsWork::$plugin->facade->react('like', $entry)
