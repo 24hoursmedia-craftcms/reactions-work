@@ -1,0 +1,26 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Reactions Work plugin for Craft CMS
+ *
+ * ReactionsWorkField Field Settings
+ *
+ * @author    info@24hoursmedia.com
+ * @copyright Copyright (c) 2020 info@24hoursmedia.com
+ * @link      https://en.24hoursmedia.com
+ * @package   ReactionsWork
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("twentyfourhoursmedia\\reactionswork\\assetbundles\\reactionswork\\ReactionsWorkAsset") %}
+
+{{ forms.textField({
+    label: 'Some Attribute',
+    instructions: 'Enter some attribute here.',
+    id: 'someAttribute',
+    name: 'someAttribute',
+    value: field['someAttribute']})
+}}

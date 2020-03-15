@@ -1,0 +1,24 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Reactions Work plugin for Craft CMS 3.x
+ *
+ * ReactionsWorkField Field Input
+ *
+ * @author    info@24hoursmedia.com
+ * @copyright Copyright (c) 2020 info@24hoursmedia.com
+ * @link      https://en.24hoursmedia.com
+ * @package   ReactionsWork
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{{ forms.textField({
+        label: 'Some Field',
+        instructions: 'Enter some text here.',
+        id: name,
+        name: name,
+        value: value})
+}}

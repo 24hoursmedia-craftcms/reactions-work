@@ -1,0 +1,26 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Reactions Work plugin for Craft CMS 3.x
+ *
+ * Reactions Work Settings.twig
+ *
+ * @author    info@24hoursmedia.com
+ * @copyright Copyright (c) 2020 info@24hoursmedia.com
+ * @link      https://en.24hoursmedia.com
+ * @package   ReactionsWork
+ * @since     1.0.0
+ */
+#}
+
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("twentyfourhoursmedia\\reactionswork\\assetbundles\\reactionswork\\ReactionsWorkAsset") %}
+
+{{ forms.textField({
+    label: 'Signing key',
+    instructions: 'Enter a secret key here. It is used to digitally sign tracking urls so people cannot tamper with it. If you leave it empty and save, a cryptographically secure key is automatically generated.',
+    id: 'signKey',
+    name: 'signKey',
+    value: settings['signKey']})
+}}

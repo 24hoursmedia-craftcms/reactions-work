@@ -1,0 +1,20 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Reactions Work plugin for Craft CMS
+ *
+ * ReactionsWorkWidget Widget Body
+ *
+ * @author    info@24hoursmedia.com
+ * @copyright Copyright (c) 2020 info@24hoursmedia.com
+ * @link      https://en.24hoursmedia.com
+ * @package   ReactionsWork
+ * @since     1.0.0
+ */
+#}
+
+{% set iconUrl = view.getAssetManager().getPublishedUrl('@twentyfourhoursmedia/reactionswork/assetbundles/reactionsworkwidgetwidget/dist', true) ~ '/img/ReactionsWorkWidget-icon.svg' %}
+
+<img src="{{ iconUrl }}" height="64" width="64" />
+
+<p>{{ message }}</p>

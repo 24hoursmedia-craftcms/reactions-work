@@ -1,0 +1,50 @@
+{
+    "name": "twentyfourhoursmedia/reactions-work",
+    "description": "Adds Facebook style likes, angry and other reactions to your site",
+    "type": "craft-plugin",
+    "version": "1.0.0",
+    "keywords": [
+        "craft",
+        "cms",
+        "craftcms",
+        "craft-plugin",
+        "reactions work",
+        "reactions",
+        "like",
+        "angry",
+        "wow",
+        "haha",
+        "sad",
+        "love"
+    ],
+    "support": {
+        "docs": "https://github.com/24hoursmedia-craftcms/reactions-work/reactions-work/blob/master/README.md",
+        "issues": "https://github.com/24hoursmedia-craftcms/reactions-work/reactions-work/issues"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "info@24hoursmedia.com",
+            "homepage": "https://en.24hoursmedia.com"
+        }
+    ],
+    "require": {
+        "craftcms/cms": "^3.0.0-RC1"
+    },
+    "autoload": {
+        "psr-4": {
+          "twentyfourhoursmedia\\reactionswork\\": "src/"
+        }
+    },
+    "extra": {
+        "name": "Reactions Work",
+        "handle": "reactions-work",
+        "hasCpSettings": true,
+        "hasCpSection": true,
+        "changelogUrl": "https://raw.githubusercontent.com/24hoursmedia-craftcms/reactions-work/reactions-work/master/CHANGELOG.md",
+        "components": {
+            "reactionsWorkService": "twentyfourhoursmedia\\reactionswork\\services\\ReactionsWorkService"
+        },
+        "class": "twentyfourhoursmedia\\reactionswork\\ReactionsWork"
+    }
+}

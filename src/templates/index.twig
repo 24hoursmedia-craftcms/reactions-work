@@ -1,0 +1,40 @@
+{# @var craft \craft\web\twig\variables\CraftVariable #}
+{#
+/**
+ * Reactions Work plugin for Craft CMS 3.x
+ *
+ * Reactions Work index.twig
+ *
+ * @author    info@24hoursmedia.com
+ * @copyright Copyright (c) 2020 info@24hoursmedia.com
+ * @link      https://en.24hoursmedia.com
+ * @package   ReactionsWork
+ * @since     1.0.0
+ */
+#}
+
+{% extends "_layouts/cp" %}
+{% import "_includes/forms" as forms %}
+
+{% do view.registerAssetBundle("twentyfourhoursmedia\\reactionswork\\assetbundles\\reactionswork\\ReactionsWorkAsset") %}
+{% do view.registerAssetBundle("twentyfourhoursmedia\\reactionswork\\assetbundles\\indexcpsection\\IndexCPSectionAsset") %}
+
+{% set docsUrl = "https://github.com/24hoursmedia-craftcms/reactions-work/reactions-work/blob/master/README.md" %}
+
+{% set title = "Reactions Work" %}
+
+{% set pluginCpUrl = url('reactions-work') %}
+
+{% set iconUrl = view.getAssetManager().getPublishedUrl('@twentyfourhoursmedia/reactionswork/assetbundles/indexcpsection/dist', true) ~ '/img/Index-icon.svg' %}
+
+{% set extraPageHeaderHtml %}
+    <div class="buttons">
+        <a href="{{ pluginCpUrl }}" class="btn submit add icon">{{ "Click Me!"|t('reactions-work') }}</a>
+    </div>
+{% endset %}
+
+{% set content %}
+    <h2>{{ "Index CP Section body goes here"|t('reactions-work') }}</h2>
+    <img src="{{ iconUrl }}" height="64" width="64" />
+    <p class="textline"></p>
+{% endset %}
