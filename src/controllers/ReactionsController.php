@@ -58,7 +58,7 @@ class ReactionsController extends Controller
         $reaction = $request->getBodyParam('reaction');
         $elementId = (int)$params['elementId'];
         $siteId = (int)$params['siteId'];
-        $userId = (int)$params['siteId'];
+        $userId = (int)$params['userId'];
 
         $reaction = $adapter->toggle($reaction, $elementId, $siteId, $userId);
 
@@ -83,7 +83,7 @@ class ReactionsController extends Controller
         $reaction = $request->getBodyParam('reaction');
         $elementId = (int)$params['elementId'];
         $siteId = (int)$params['siteId'];
-        $userId = (int)$params['siteId'];
+        $userId = (int)$params['userId'];
 
         $recording = $adapter->toggle($reaction, $elementId, $siteId, $userId);
         $dto = [
