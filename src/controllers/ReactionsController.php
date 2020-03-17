@@ -10,6 +10,7 @@
 
 namespace twentyfourhoursmedia\reactionswork\controllers;
 
+use twentyfourhoursmedia\reactionswork\helpers\traits\ServiceProviderTrait;
 use twentyfourhoursmedia\reactionswork\ReactionsWork;
 
 use Craft;
@@ -23,6 +24,8 @@ use twentyfourhoursmedia\reactionswork\services\ReactionsWorkFacade;
  */
 class ReactionsController extends Controller
 {
+
+    use ServiceProviderTrait;
 
     // Protected Properties
     // =========================================================================
@@ -47,8 +50,8 @@ class ReactionsController extends Controller
         $this->requirePostRequest();
 
         $request = Craft::$app->getRequest();
-        $adapter = ReactionsWork::$plugin->reactionsWorkService->getAdapter();
-        $signer = ReactionsWork::$plugin->urlSigner;
+        $adapter = $this->adapter();
+        $signer = $this->urlSigner();
 
         $params = $signer->verifySignedParams($request->getQueryParams());
 
@@ -57,7 +60,7 @@ class ReactionsController extends Controller
         $siteId = (int)$params['siteId'];
         $userId = (int)$params['siteId'];
 
-        $adapter->toggle($reaction, $elementId, $siteId, $userId);
+        $reaction = $adapter->toggle($reaction, $elementId, $siteId, $userId);
 
         return $this->redirectToPostedUrl();
     }
@@ -72,8 +75,8 @@ class ReactionsController extends Controller
         $this->requirePostRequest();
 
         $request = Craft::$app->getRequest();
-        $adapter = ReactionsWork::$plugin->reactionsWorkService->getAdapter();
-        $signer = ReactionsWork::$plugin->urlSigner;
+        $adapter = $this->adapter();
+        $signer = $this->urlSigner();
 
         $params = $signer->verifySignedParams($request->getQueryParams());
 

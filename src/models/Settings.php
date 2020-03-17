@@ -22,6 +22,8 @@ use craft\base\Model;
  */
 class Settings extends Model
 {
+    const NUM_CUSTOM_HANDLES = 5;
+
     // Public Properties
     // =========================================================================
 
@@ -30,7 +32,18 @@ class Settings extends Model
      */
     public $signKey = '';
 
-
+    // The database schema takes into account 5 custom Reactions,
+    // they can be enabled through the settings
+    public $customReaction1Enabled = false;
+    public $customReaction1Handle = 'custom1';
+    public $customReaction2Enabled = false;
+    public $customReaction2Handle = 'custom2';
+    public $customReaction3Enabled = false;
+    public $customReaction3Handle = 'custom3';
+    public $customReaction4Enabled = false;
+    public $customReaction4Handle = 'custom4';
+    public $customReaction5Enabled = false;
+    public $customReaction5Handle = 'custom5';
 
     // Public Methods
     // =========================================================================
@@ -40,9 +53,18 @@ class Settings extends Model
      */
     public function rules()
     {
-        return [
+        $rules = [
             ['signKey', 'string'],
             ['signKey', 'default', 'value' => bin2hex(random_bytes(32))],
         ];
+
+        for ($i = 1; $i <= 5; $i++) {
+            $rules[] = ["customReaction{$i}Enabled", 'boolean'];
+            $rules[] = ["customReaction{$i}Handle", 'string'];
+            $rules[] = ["customReaction{$i}Handle", 'default', 'value' => "custom{$i}"];
+            $rules[] = ["customReaction{$i}Handle", 'match', 'pattern' => '/^[\w-]+$/', 'message' => 'Only alphanumeric characters and the _ symbol are allowed'];
+        }
+
+        return $rules;
     }
 }

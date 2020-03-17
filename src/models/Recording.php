@@ -8,6 +8,7 @@
 namespace twentyfourhoursmedia\reactionswork\models;
 use twentyfourhoursmedia\reactionswork\helpers\traits\AttributeNamesGeneratingTrait;
 use twentyfourhoursmedia\reactionswork\models\traits\ReactionsTrait;
+use twentyfourhoursmedia\reactionswork\ReactionsWork;
 use twentyfourhoursmedia\reactionswork\records\Recording as RecordingRecord;
 
 use craft\base\Model;
@@ -33,8 +34,9 @@ class Recording extends Model
 
 
     public function react($reactionHandle, $userId) : bool {
+        $reactionHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($reactionHandle);
         $attrs = [];
-        foreach (ReactionsWorkService::REACTION_HANDLES as $handle) {
+        foreach (ReactionsWorkService::ALL_REACTION_HANDLES as $handle) {
             $countAttr = $this->createCountAttrName($handle);
             $usersAttr = $this->createUserIdsAttrName($handle);
             $allCountAttr = $this->createCountAttrName('all');
@@ -65,9 +67,10 @@ class Recording extends Model
     }
 
     public function toggle($reactionHandle, $userId) : bool {
+        $reactionHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($reactionHandle);
         $attrs = [];
         $wasAdded = false;
-        foreach (ReactionsWorkService::REACTION_HANDLES as $handle) {
+        foreach (ReactionsWorkService::ALL_REACTION_HANDLES as $handle) {
             $countAttr = $this->createCountAttrName($handle);
             $usersAttr = $this->createUserIdsAttrName($handle);
             $allCountAttr = $this->createCountAttrName('all');
@@ -117,6 +120,7 @@ class Recording extends Model
      */
     public function countReactions($handle)
     {
+        $reactionHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($handle);
         $v = $this->attributes[$this->createCountAttrName($handle)] ?? null;
         return $v !== null ? (int)$v : null;
     }
@@ -128,7 +132,7 @@ class Recording extends Model
     public function countAllReactions() : int
     {
         $total = 0;
-        foreach (ReactionsWorkService::REACTION_HANDLES as $handle) {
+        foreach (ReactionsWorkService::ALL_REACTION_HANDLES as $handle) {
             $total+= $this->countReactions($handle);
         }
         return $total;
@@ -140,6 +144,9 @@ class Recording extends Model
      * @return bool
      */
     public function can($handle, $user = null) {
+
+        $handle = ReactionsWork::$plugin->reactionsWorkService->realHandle($handle);
+
         if (!$user) {
             return false;
         }
@@ -162,6 +169,7 @@ class Recording extends Model
      */
     public function canUnreact($handle, $user = null)
     {
+        $handle = ReactionsWork::$plugin->reactionsWorkService->realHandle($handle);
         if (!$user) {
             return false;
         }

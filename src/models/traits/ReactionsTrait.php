@@ -30,4 +30,19 @@ trait ReactionsTrait
 
     public $allCount = 0;
     public $allUserIds = [];
+
+    public $custom1Count = 0;
+    public $custom1UserIds = [];
+
+    public $custom2Count = 0;
+    public $custom2UserIds = [];
+
+    public $custom3Count = 0;
+    public $custom3UserIds = [];
+
+    public $custom4Count = 0;
+    public $custom4UserIds = [];
+
+    public $custom5Count = 0;
+    public $custom5UserIds = [];
 }

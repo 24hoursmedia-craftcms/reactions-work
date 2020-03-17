@@ -22,5 +22,59 @@
     instructions: 'Enter a secret key here. It is used to digitally sign tracking urls so people cannot tamper with it. If you leave it empty and save, a cryptographically secure key is automatically generated.',
     id: 'signKey',
     name: 'signKey',
-    value: settings['signKey']})
-}}
+    value: settings['signKey']}) }}
+
+<hr/>
+
+{% set numCustomReactions = 5 %}
+<h3>{{ 'Custom columns' | t }}</h3>
+
+<p>
+    You can specify up to {{ numCustomReactions }} custom reaction types.
+    To use a custom reaction type, you have to enable the new type here, and if you want you can specify a custom handle.
+</p>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th></th>
+        <th>Enable</th>
+        <th>Handle</th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for idx in range(1, numCustomReactions) %}
+        {% set enabledFieldName = "customReaction" ~idx ~ "Enabled" %}
+        {% set handleFieldName = "customReaction" ~idx ~ "Handle" %}
+        <tr style="vertical-align: top">
+            <td style="vertical-align: top">Custom reaction {{ idx }}</td>
+            <td valign="top">
+                {{ forms.lightSwitchField({
+                    label: '',
+                    instructions: '',
+                    id: enabledFieldName,
+                    name: enabledFieldName,
+                    on: settings[enabledFieldName]
+                }) }}
+            </td>
+            <td >
+                {{ forms.textField({
+                    label: '',
+                    instructions: '',
+                    id: handleFieldName,
+                    name: handleFieldName,
+                    size: 12,
+                    value: settings[handleFieldName],
+                }) }}
+            </td>
+            <td>
+                {% if settings.getError(handleFieldName) %}
+                    {{ forms.errorList([settings.getError(handleFieldName)]) }}
+                {% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+

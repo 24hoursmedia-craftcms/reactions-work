@@ -9,6 +9,7 @@ namespace twentyfourhoursmedia\reactionswork\adapters;
 
 use twentyfourhoursmedia\reactionswork\helpers\traits\AttributeNamesGeneratingTrait;
 use twentyfourhoursmedia\reactionswork\models\Recording;
+use twentyfourhoursmedia\reactionswork\ReactionsWork;
 use twentyfourhoursmedia\reactionswork\records\Recording as RecordingRecord;
 use twentyfourhoursmedia\reactionswork\services\ReactionsWorkService;
 
@@ -72,7 +73,9 @@ class DatabaseReactionsAdapter implements ReactionsAdapterInterface
      */
     public function react(string $reactionHandle, int $elementId, int $siteId, int $userId): Recording
     {
-        if (!in_array($reactionHandle, ReactionsWorkService::REACTION_HANDLES)) {
+        $reactionHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($reactionHandle);
+
+        if (!in_array($reactionHandle, ReactionsWorkService::ALL_REACTION_HANDLES, true)) {
             throw new \RuntimeException('Invalid reaction handle ' . $reactionHandle);
         }
         $recording = $this->getRecording($elementId, $siteId);
@@ -89,7 +92,9 @@ class DatabaseReactionsAdapter implements ReactionsAdapterInterface
      */
     public function toggle(string $reactionHandle, int $elementId, int $siteId, int $userId): Recording
     {
-        if (!in_array($reactionHandle, ReactionsWorkService::REACTION_HANDLES)) {
+        $reactionHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($reactionHandle);
+
+        if (!in_array($reactionHandle, ReactionsWorkService::ALL_REACTION_HANDLES, true)) {
             throw new \RuntimeException('Invalid reaction handle ' . $reactionHandle);
         }
         $recording = $this->getRecording($elementId, $siteId);

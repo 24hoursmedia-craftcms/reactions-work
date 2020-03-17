@@ -39,7 +39,12 @@ class Install extends Migration
         'haha',
         'wow',
         'sad',
-        'angry'
+        'angry',
+        'custom1',
+        'custom2',
+        'custom3',
+        'custom4',
+        'custom5'
     ];
 
     // Public Properties
@@ -154,7 +159,7 @@ class Install extends Migration
             ),
             Recording::TABLE_NAME,
             [$this->createCountAttrName('all')],
-            true
+            false
         );
 
         // Additional commands depending on the db driver
