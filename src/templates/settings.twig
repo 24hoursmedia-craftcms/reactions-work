@@ -69,7 +69,7 @@
                 }) }}
             </td>
             <td>
-                {% if settings.getError(handleFieldName) %}
+                {% if settings.firstError(handleFieldName) %}
                     {{ forms.errorList([settings.getError(handleFieldName)]) }}
                 {% endif %}
             </td>
