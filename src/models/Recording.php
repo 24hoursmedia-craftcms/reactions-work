@@ -95,10 +95,12 @@ class Recording extends Model
         }
         $userId = (int)$userId;
         foreach (ReactionsWorkService::ALL_REACTION_HANDLES as $handle) {
-            $usersAttr = $this->createUserIdsAttrName($handle);
-            $userIds = $this->attributes[$usersAttr] ?? [];
-            if (in_array($userId, $userIds, true)) {
-                return $returnAlias ? ReactionsWork::$plugin->reactionsWorkService->handleAlias($handle) : $handle;
+            if ($handle !== 'all') {
+                $usersAttr = $this->createUserIdsAttrName($handle);
+                $userIds = $this->attributes[$usersAttr] ?? [];
+                if (in_array($userId, $userIds, true)) {
+                    return $returnAlias ? ReactionsWork::$plugin->reactionsWorkService->handleAlias($handle) : $handle;
+                }
             }
         }
         return null;
