@@ -50,13 +50,11 @@ class DatabaseReactionsAdapter implements ReactionsAdapterInterface
      */
     public function getRecording(int $elementId, int $siteId) : Recording {
         $record = $this->getRecordingRecord($elementId, $siteId);
-
         $recording = new Recording();
         $attrs = [
             'siteId' => $record->attributes['siteId'],
             'elementId' => $record->attributes['elementId'],
         ];
-
         foreach (ReactionsWorkService::ALL_REACTION_HANDLES as $handle) {
             $countAttr = $this->createCountAttrName($handle);
             $usersAttr = $this->createUserIdsAttrName($handle);
@@ -71,19 +69,15 @@ class DatabaseReactionsAdapter implements ReactionsAdapterInterface
     /**
      * @inheritDoc
      */
-    public function react(string $reactionHandle, int $elementId, int $siteId, int $userId): Recording
+    public function register(string $reactionHandle, int $elementId, int $siteId, int $userId, $set = true): Recording
     {
         $reactionHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($reactionHandle);
-
         if (!in_array($reactionHandle, ReactionsWorkService::ALL_REACTION_HANDLES, true)) {
             throw new \RuntimeException('Invalid reaction handle ' . $reactionHandle);
         }
         $recording = $this->getRecording($elementId, $siteId);
-        $recording->react($reactionHandle, $userId);
-
-        $record = $this->getRecordingRecord($elementId, $siteId);
-        $this->moveModelDataToRecord($recording, $record);
-        $record->save(false);
+        $recording->register($reactionHandle, $userId, $set);
+        $this->save($recording);
         return $recording;
     }
 
@@ -93,20 +87,16 @@ class DatabaseReactionsAdapter implements ReactionsAdapterInterface
     public function toggle(string $reactionHandle, int $elementId, int $siteId, int $userId): Recording
     {
         $reactionHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($reactionHandle);
-
         if (!in_array($reactionHandle, ReactionsWorkService::ALL_REACTION_HANDLES, true)) {
             throw new \RuntimeException('Invalid reaction handle ' . $reactionHandle);
         }
         $recording = $this->getRecording($elementId, $siteId);
         $recording->toggle($reactionHandle, $userId);
-
-        $record = $this->getRecordingRecord($elementId, $siteId);
-        $this->moveModelDataToRecord($recording, $record);
-        $record->save(false);
+        $this->save($recording);
         return $recording;
     }
 
-    protected function moveModelDataToRecord(Recording $model, RecordingRecord $record) {
+    private function moveModelDataToRecord(Recording $model, RecordingRecord $record) {
         $modelAttrs = $model->getAttributes();
         foreach (ReactionsWorkService::ALL_REACTION_HANDLES as $handle) {
             $countAttr = $this->createCountAttrName($handle);
@@ -116,5 +106,15 @@ class DatabaseReactionsAdapter implements ReactionsAdapterInterface
         }
     }
 
+    /**
+     * @inheritDoc
+     */
+    public function save(Recording $recording): bool
+    {
+        $attrs = $recording->getAttributes(['siteId', 'elementId']);
+        $record = $this->getRecordingRecord($attrs['elementId'], $attrs['siteId']);
+        $this->moveModelDataToRecord($recording, $record);
+        return $record->save(false);
+    }
 
 }

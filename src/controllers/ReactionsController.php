@@ -16,6 +16,7 @@ use twentyfourhoursmedia\reactionswork\ReactionsWork;
 use Craft;
 use craft\web\Controller;
 use twentyfourhoursmedia\reactionswork\services\ReactionsWorkFacade;
+use yii\web\BadRequestHttpException;
 
 /**
  * @author    info@24hoursmedia.com
@@ -41,27 +42,45 @@ class ReactionsController extends Controller
     // =========================================================================
 
     /**
+     * @return \twentyfourhoursmedia\reactionswork\models\Recording | null
+     * @throws BadRequestHttpException
+     */
+    protected function handleReaction() {
+        $this->requirePostRequest();
+        $request = Craft::$app->getRequest();
+        $adapter = $this->adapter();
+        $signer = $this->urlSigner();
+        $params = $signer->verifySignedParams($request->getQueryParams());
+        $reaction = $request->getBodyParam('reaction');
+        $actionType = $request->getBodyParam('react','toggle');
+        $elementId = (int)$params['elementId'];
+        $siteId = (int)$params['siteId'];
+        $userId = (int)$params['userId'];
+
+        switch ($actionType) {
+            case 'toggle':
+                $recording = $adapter->toggle($reaction, $elementId, $siteId, $userId);
+                break;
+            case 'set':
+                $recording = $adapter->register($reaction, $elementId, $siteId, $userId, true);
+                break;
+            case 'unset':
+                $recording = $adapter->register($reaction, $elementId, $siteId, $userId, false);
+                break;
+            default:
+                throw new BadRequestHttpException('Invalid reaction');
+        }
+        return $recording;
+    }
+
+    /**
      * Endpoint to post a regular form to
      * @return mixed
      * @throws \yii\web\BadRequestHttpException
      */
     public function actionReact()
     {
-        $this->requirePostRequest();
-
-        $request = Craft::$app->getRequest();
-        $adapter = $this->adapter();
-        $signer = $this->urlSigner();
-
-        $params = $signer->verifySignedParams($request->getQueryParams());
-
-        $reaction = $request->getBodyParam('reaction');
-        $elementId = (int)$params['elementId'];
-        $siteId = (int)$params['siteId'];
-        $userId = (int)$params['userId'];
-
-        $reaction = $adapter->toggle($reaction, $elementId, $siteId, $userId);
-
+        $recording = $this->handleReaction();
         return $this->redirectToPostedUrl();
     }
 
@@ -72,26 +91,12 @@ class ReactionsController extends Controller
      */
     public function actionReactXhr()
     {
-        $this->requirePostRequest();
-
-        $request = Craft::$app->getRequest();
-        $adapter = $this->adapter();
-        $signer = $this->urlSigner();
-
-        $params = $signer->verifySignedParams($request->getQueryParams());
-
-        $reaction = $request->getBodyParam('reaction');
-        $elementId = (int)$params['elementId'];
-        $siteId = (int)$params['siteId'];
-        $userId = (int)$params['userId'];
-
-        $recording = $adapter->toggle($reaction, $elementId, $siteId, $userId);
+        $recording = $this->handleReaction();
         $dto = [
             'success' => $recording ? true : false,
             'message' => null
         ];
         return $this->asJson($dto);
     }
-
 
 }

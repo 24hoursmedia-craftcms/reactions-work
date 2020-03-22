@@ -32,8 +32,13 @@ class Recording extends Model
     public $elementId;
 
 
-
-    public function react($reactionHandle, $userId) : bool {
+    /**
+     * @param string $reactionHandle
+     * @param int $userId
+     * @param bool $set
+     * @return bool
+     */
+    public function register($reactionHandle, $userId, bool $set = true) : bool {
         $reactionHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($reactionHandle);
         $attrs = [];
         foreach (ReactionsWorkService::ALL_REACTION_HANDLES as $handle) {
@@ -45,7 +50,7 @@ class Recording extends Model
             $users = $this->attributes[$usersAttr];
             $allUsers = $this->attributes[$allUsersAttr];
 
-            if ($handle === $reactionHandle) {
+            if ($set && $handle === $reactionHandle) {
                 // add the user
                 array_unshift($users, $userId);
                 $users = array_values(array_unique($users));
@@ -56,6 +61,8 @@ class Recording extends Model
             } else {
                 // remove the user if any
                 $users = array_diff($users, [$userId]);
+                array_unshift($allUsers, $userId);
+                $allUsers = array_values(array_unique($allUsers));
             }
             $attrs[$usersAttr] = $users;
             $attrs[$allUsersAttr] = $allUsers;
@@ -66,63 +73,41 @@ class Recording extends Model
         return true;
     }
 
-    public function toggle($reactionHandle, $userId) : bool {
-        $reactionHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($reactionHandle);
-        $attrs = [];
-        $wasAdded = false;
+    /**
+     * Returns the reaction handle for a user or none if null
+     * @param int | null $userId
+     * @param bool $returnAlias     set to true/false to return the alias or the real internal handle
+     * @return string | null
+     */
+    public function getReaction($userId, bool $returnAlias = true) {
+        if (!$userId) {
+            return null;
+        }
         foreach (ReactionsWorkService::ALL_REACTION_HANDLES as $handle) {
-            $countAttr = $this->createCountAttrName($handle);
             $usersAttr = $this->createUserIdsAttrName($handle);
-            $allCountAttr = $this->createCountAttrName('all');
-            $allUsersAttr = $this->createUserIdsAttrName('all');
-
-            $users = $this->attributes[$usersAttr];
-            $allUsers = $this->attributes[$allUsersAttr];
-
-            if ($handle === $reactionHandle) {
-                if (in_array($userId, $users, true)) {
-                    // remove the user if any
-                    $users = array_diff($users, [$userId]);
-                    $users = array_values(array_unique($users));
-                } else {
-                    // add the user
-                    $users[] = $userId;
-                    $users = array_values(array_unique($users));
-                    $wasAdded = true;
-                }
-            } else {
-                // remove the user if any
-                $users = array_diff($users, [$userId]);
+            $userIds = $this->attributes[$usersAttr] ?? [];
+            if (in_array($userId, $userIds, true)) {
+                return $returnAlias ? ReactionsWork::$plugin->reactionsWorkService->handleAlias($handle) : $handle;
             }
-            $attrs[$usersAttr] = $users;
-            $attrs[$countAttr] = count($users);
         }
+        return null;
+    }
 
-        if ($wasAdded) {
-            if (!in_array($userId, $allUsers, true)) {
-                array_unshift($allUsers, $userId);
-                $allUsers = array_values(array_unique($allUsers));
-            }
-        } else {
-            $allUsers = array_diff($allUsers, [$userId]);
-            $allUsers = array_values(array_unique($allUsers));
-        }
-        $attrs[$allUsersAttr] = $allUsers;
-        $attrs[$allCountAttr] = count($allUsers);
-
-        $this->setAttributes($attrs, false);
-        return true;
+    public function toggle($reactionHandle, $userId) : bool {
+        $selectedHandle = $this->getReaction($userId, false);
+        $realHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($reactionHandle);
+        return $this->register($reactionHandle, $userId, $selectedHandle !== $realHandle);
     }
 
     /**
      * @param $handle
      * @return int|null
      */
-    public function countReactions($handle)
+    public function countReactions($handle) : int
     {
-        $reactionHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($handle);
-        $v = $this->attributes[$this->createCountAttrName($handle)] ?? null;
-        return $v !== null ? (int)$v : null;
+        $realHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($handle);
+        $v = $this->attributes[$this->createCountAttrName($realHandle)] ?? null;
+        return $v !== null ? (int)$v : 0;
     }
 
     /**
@@ -133,7 +118,7 @@ class Recording extends Model
     {
         $total = 0;
         foreach (ReactionsWorkService::ALL_REACTION_HANDLES as $handle) {
-            $total+= $this->countReactions($handle);
+            $handle !== 'all' && $total+= $this->countReactions($handle);
         }
         return $total;
     }
@@ -143,10 +128,8 @@ class Recording extends Model
      * @param User $user
      * @return bool
      */
-    public function can($handle, $user = null) {
-
-        $handle = ReactionsWork::$plugin->reactionsWorkService->realHandle($handle);
-
+    public function canRegister($handle, $user = null): bool
+    {
         if (!$user) {
             return false;
         }
@@ -154,11 +137,9 @@ class Recording extends Model
         if (!$userId) {
             return false;
         }
-
-        $attrName = $this->createUserIdsAttrName($handle);
-        $attrs = $this->getAttributes([$attrName]);
-        $userIds = $attrs[$attrName] ?? [];
-        return !in_array((int)$userId, $userIds, true);
+        $selectedHandle = $this->getReaction($userId, false);
+        $realHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($handle);
+        return $selectedHandle !== $realHandle;
     }
 
     /**
@@ -167,9 +148,8 @@ class Recording extends Model
      * @return bool
      * @throws \Throwable
      */
-    public function canUnreact($handle, $user = null)
+    public function canDeregister($handle, $user = null): bool
     {
-        $handle = ReactionsWork::$plugin->reactionsWorkService->realHandle($handle);
         if (!$user) {
             return false;
         }
@@ -177,11 +157,9 @@ class Recording extends Model
         if (!$userId) {
             return false;
         }
-
-        $attrName = $this->createUserIdsAttrName($handle);
-        $attrs = $this->getAttributes([$attrName]);
-        $userIds = $attrs[$attrName] ?? [];
-        return in_array((int)$userId, $userIds, true);
+        $selectedHandle = $this->getReaction($userId, false);
+        $realHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($handle);
+        return $selectedHandle === $realHandle;
     }
 
 }

@@ -26,15 +26,24 @@ interface ReactionsAdapterInterface
     public function getRecording(int $elementId, int $siteId) : Recording;
 
     /**
+     * Persists a recording model
+     *
+     * @param Recording $recording
+     * @return bool
+     */
+    public function save(Recording $recording) : bool;
+
+    /**
      * Registers a reaction for an element
      *
      * @param string $reactionHandle
      * @param int $elementId
      * @param int $siteId
      * @param int $userId
+     * @param bool $set
      * @return Recording
      */
-    public function react(string $reactionHandle, int $elementId, int $siteId, int $userId) : Recording;
+    public function register(string $reactionHandle, int $elementId, int $siteId, int $userId, $set = true) : Recording;
 
     /**
      * Toggles a reaction for an element

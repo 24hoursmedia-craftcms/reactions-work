@@ -109,6 +109,16 @@ class ReactionsWorkService extends Component
         return isset($map[$handleOrAlias]) ? $handleOrAlias : array_search($handleOrAlias, $map, true);
     }
 
+    /**
+     * Returns the aliassed handle of a handle or alias
+     * @param $handleOrAlias
+     * @return false|int|mixed|string
+     */
+    public function handleAlias($handleOrAlias) {
+        $handle = $this->realHandle($handleOrAlias);
+        $map = $this->getSupportedReactions();
+        return $map[$handle] ?? null;
+    }
 
     /**
      * Get the adapter to store and retrieve reactions that the application is configurerd to use.
