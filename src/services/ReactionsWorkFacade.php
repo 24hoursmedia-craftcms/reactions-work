@@ -197,7 +197,7 @@ class ReactionsWorkFacade extends Component
         return UrlHelper::actionUrl('reactions-work/reactions/react-xhr', $query);
     }
 
-    public function signedUrl($path, array $params = []): string
+    public function signUrl($path, array $params = []): string
     {
         $query = ReactionsWork::$plugin->urlSigner->createSignedQuery($params);
         return UrlHelper::url($path, $query);
