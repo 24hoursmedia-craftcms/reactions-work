@@ -137,6 +137,27 @@ class Recording extends Model
     }
 
     /**
+     * @return int[]
+     */
+    public function getUserIds($handle) : array
+    {
+        $realHandle = ReactionsWork::$plugin->reactionsWorkService->realHandle($handle);
+        if (!$realHandle) {
+            return [];
+        }
+        $attrName = $realHandle . 'UserIds';
+        return $this->{$attrName};
+    }
+
+    /**
+     * @return int[]
+     */
+    public function getAllUserIds() : array
+    {
+        return $this->allUserIds;
+    }
+
+    /**
      * @param $handle
      * @param User $user
      * @return bool
