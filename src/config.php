@@ -24,7 +24,7 @@
 
 return [
 
-    // This controls blah blah blah
-    "someAttribute" => true,
+    // secret for url signing
+    'signKey' => '',
 
 ];

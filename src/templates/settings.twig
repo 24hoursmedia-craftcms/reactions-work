@@ -17,6 +17,10 @@
 
 {% do view.registerAssetBundle("twentyfourhoursmedia\\reactionswork\\assetbundles\\reactionswork\\ReactionsWorkAsset") %}
 
+
+<p>View the <a href="https://io.24hoursmedia.com/reactions-work" target="_blank">Reactions Work plugin documentation site</a> &raquo;</p>
+<hr/>
+
 {{ forms.textField({
     label: 'Signing key',
     instructions: 'Enter a secret key here. It is used to digitally sign tracking urls so people cannot tamper with it. If you leave it empty and save, a cryptographically secure key is automatically generated.',
@@ -27,7 +31,7 @@
 <hr/>
 
 {% set numCustomReactions = 5 %}
-<h3>{{ 'Custom columns' | t }}</h3>
+<h3>{{ 'Custom reactions' | t }}</h3>
 
 <p>
     You can specify up to {{ numCustomReactions }} custom reaction types.

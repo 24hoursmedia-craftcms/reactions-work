@@ -61,6 +61,16 @@ class ReactionsWork extends Plugin
      */
     public $schemaVersion = '1.1.0';
 
+    /**
+     * @var bool
+     */
+    public $hasCpSection = false;
+
+    /**
+     * @var bool
+     */
+    public $hasCpSettings = true;
+
     // Public Methods
     // =========================================================================
 
@@ -89,6 +99,7 @@ class ReactionsWork extends Plugin
             }
         );
 
+        /*
         Event::on(
             UrlManager::class,
             UrlManager::EVENT_REGISTER_CP_URL_RULES,
@@ -96,7 +107,9 @@ class ReactionsWork extends Plugin
                 $event->rules['cpActionTrigger1'] = 'reactions-work/default/do-something';
             }
         );
+        */
 
+        /*
         Event::on(
             Fields::class,
             Fields::EVENT_REGISTER_FIELD_TYPES,
@@ -104,7 +117,9 @@ class ReactionsWork extends Plugin
                 $event->types[] = ReactionsWorkFieldField::class;
             }
         );
+        */
 
+        /*
         Event::on(
             Dashboard::class,
             Dashboard::EVENT_REGISTER_WIDGET_TYPES,
@@ -112,6 +127,7 @@ class ReactionsWork extends Plugin
                 $event->types[] = ReactionsWorkWidgetWidget::class;
             }
         );
+        */
 
         Event::on(
             CraftVariable::class,
@@ -165,4 +181,7 @@ class ReactionsWork extends Plugin
             ]
         );
     }
+
+
+
 }
