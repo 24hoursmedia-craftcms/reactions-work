@@ -5,6 +5,14 @@ to any element.
 
 VISIT THE PLUGIN HOMEPAGE AT [https://io.24hoursmedia.com/reactions-work](https://io.24hoursmedia.com/reactions-work)
 
+
+
+
+![https://io.24hoursmedia.com/reactions-work](resources/img/reactions.png)
+
+
+
+
 ##  Features
 
 * Users can apply the following reactions to content: like, love, haha, wow, sad, angry
@@ -16,7 +24,6 @@ VISIT THE PLUGIN HOMEPAGE AT [https://io.24hoursmedia.com/reactions-work](https:
 * Suitable for large sites due to efficient storage of users who voted
 * Voting urls are signed urls are signed and protected with a secret key to prevet tampering by robots or malicious users
 
-![https://io.24hoursmedia.com/reactions-work](resources/img/reactions.png)
 
 ----
 
