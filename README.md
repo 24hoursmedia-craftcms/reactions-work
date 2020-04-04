@@ -16,6 +16,8 @@ VISIT THE PLUGIN HOMEPAGE AT [https://io.24hoursmedia.com/reactions-work](https:
 * Suitable for large sites due to efficient storage of users who voted
 * Voting urls are signed urls are signed and protected with a secret key to prevet tampering by robots or malicious users
 
+![https://io.24hoursmedia.com/reactions-work](resources/img/reactions.png)
+
 ----
 
 Brought to you by [info@24hoursmedia.com](https://en.24hoursmedia.com)
