@@ -2,7 +2,7 @@
     "name": "twentyfourhoursmedia/reactions-work",
     "description": "Adds Facebook style likes, angry and other reactions to your site",
     "type": "craft-plugin",
-    "version": "1.2.6",
+    "version": "1.2.7",
     "keywords": [
         "craft",
         "cms",
@@ -21,7 +21,7 @@
         "docs": "https://github.com/24hoursmedia-craftcms/reactions-work/reactions-work/blob/master/README.md",
         "issues": "https://github.com/24hoursmedia-craftcms/reactions-work/reactions-work/issues"
     },
-    "license": "MIT",
+    "license": "proprietary",
     "authors": [
         {
             "name": "info@24hoursmedia.com",
